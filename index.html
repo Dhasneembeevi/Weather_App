@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather app</title>
+    <style>
+        .display{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+    </style>
+</head>
+<body>
+<section>
+    <input type="text" placeholder="enter city" id="cityinput"/>
+    <input type="submit" value="submit" id="add">
+</section>
+<section class="display">
+    <div class="wrapper">
+        <h4 id="city"></h4>
+        <p id="temp"></p>
+        <p id="humidity"></p>
+        <p id="windsp"></p>
+        <p id="direction"></p>
+        <p id="weatherCondition"></p>
+    </div>
+</section>
+
+    <script>
+const input = document.getElementById('cityinput');
+const button = document.getElementById('add');
+const city = document.getElementById('city');
+const temp = document.getElementById('temp');
+
+const humidity = document.getElementById('humidity');
+const windspeed = document.getElementById('windsp');
+const direction = document.getElementById('direction')
+const weatherCondition = document.getElementById('weatherCondition');
+let apiKey = 'c67f0c8d918d93514fdc7096db6fad40'
+function conversion(value){
+    return (value - 273).toFixed(2)
+}
+button.addEventListener('click',function(){
+    console.log(input.value)
+    fetch(`http://api.openweathermap.org/data/2.5/weather?q=${input.value}&APPID=c67f0c8d918d93514fdc7096db6fad40`)
+    .then(res=>
+    res.json())
+   //.then(data =>console.log(data))
+    .then(data=>{
+        var name = data['name']
+        var temperature = data['main']['temp']
+        var hum = data['main']['humidity']
+        var condition = data['weather']['0']['description']
+        var wndsp = data['wind']['speed']
+        var dt = data['dt']
+        console.log(dt)
+        city.innerHTML = `Weather of ${name}`
+        temp.innerHTML = `Temperature: ${conversion(temperature)} celsius`
+        humidity.innerHTML = `Humidity : ${hum}`
+        windspeed.innerHTML = `Wind Speed : ${wndsp}`
+        direction.innerHTML = `Wind Direction: ${dt}`
+        weatherCondition.innerHTML = `Weather Condition : ${condition}`
+    })
+    .catch(err=>{
+        alert('Wrong city')
+    })
+})
+
+        </script>
+</body>
+</html>
